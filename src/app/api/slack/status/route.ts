@@ -1,12 +1,19 @@
-import dbConnect from '@/db/db';
-import { User } from '@/models/user.model';
-import type { NextApiRequest, NextApiResponse } from 'next';
+// src/app/api/slack/status/route.ts
+import { NextResponse } from "next/server";
+import dbConnect from "@/db/db";
+import { User } from "@/models/user.model";
 
-
-export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: Request) {
   await dbConnect();
-  const { userId } = req.query; // replace with session userId
-  const user = await User.findById(userId);
 
-  res.json({ connected: !!user?.slack?.access_token });
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
+
+  if (!userId) {
+    return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+  }
+
+  const user = await User.findById(userId);
+  return NextResponse.json({ connected: !!user?.slack?.access_token });
 }
+
