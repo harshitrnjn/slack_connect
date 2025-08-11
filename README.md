@@ -37,6 +37,7 @@ Built with _Next.js, **Tailwind CSS, **MongoDB, and \*\*Node.js_ runtime.
   - MongoDB stores tokens, user details, and scheduled message records.
 
 - _Scheduling System – A serverless-friendly scheduler triggered via an external cron service (e.g., cron-job.org) that:_
+
   - Periodically checks the database for pending messages whose send time has arrived.
 
   - Sends them to Slack.
@@ -45,5 +46,34 @@ Built with _Next.js, **Tailwind CSS, **MongoDB, and \*\*Node.js_ runtime.
 
 ---
 
- _Conclusion_
-  - The result is a full-stack Slack messaging tool that works seamlessly on Vercel without background workers, gives real-time status tracking, and allows both instant and scheduled message delivery in Slack channels.
+_Conclusion_
+
+- The result is a full-stack Slack messaging tool that works seamlessly on Vercel without background workers, gives real-time status tracking, and allows both instant and scheduled message delivery in Slack channels.
+
+#HOW TO SETUP CODE:#
+
+- Clone the Repository
+  bash
+
+  git clone https://github.com/harshitrnjn/slack_connect.git
+  cd slack_connect
+
+-  Install Dependencies
+  bash
+ 
+  npm install
+
+- Create a .env.local File
+    Inside your project root, create a .env.local file:
+
+    env
+
+    MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>
+    SLACK_CLIENT_ID=your_slack_client_id
+    SLACK_CLIENT_SECRET=your_slack_client_secret
+    SLACK_REDIRECT_URI=https://<your-ngrok-url>/api/auth/slack
+    FRONTEND_URL=http://localhost:3000
+    SLACK_BOT_TOKEN=xoxb-xxxxxxxxxxxxxxxxxxxxxxxx
+    NGROK_URL=https://<your-ngrok-url>
+
+---
