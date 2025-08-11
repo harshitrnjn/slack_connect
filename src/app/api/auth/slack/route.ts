@@ -15,7 +15,6 @@ export async function GET(req: Request) {
   const redirectUri = `${process.env.NEXT_PUBLIC_NGROK_URL}/api/auth/slack`;
 
   try {
-    // Step 1: Exchange code for token
     const tokenResponse = await axios.post(
       "https://slack.com/api/oauth.v2.access",
       new URLSearchParams({
@@ -35,12 +34,11 @@ export async function GET(req: Request) {
       );
     }
 
-    // Step 2: Fetch user info using the bot token (xoxb-...)
     const profileRes = await axios.get(
       `https://slack.com/api/users.info?user=${data.authed_user.id}`,
       {
         headers: {
-          Authorization: `Bearer ${data.access_token}`, // Use bot token
+          Authorization: `Bearer ${data.access_token}`, 
         },
       }
     );
@@ -57,7 +55,6 @@ export async function GET(req: Request) {
 
     const slackUser = profileRes.data.user;
 
-    // Step 3: Save or update user in DB
     await dbConnect();
 
     let user = await User.findOne({
@@ -68,7 +65,6 @@ export async function GET(req: Request) {
     });
 
     if (user) {
-      // User exists — update tokens
       user.slack = {
         id: slackUser.id,
         access_token: data.access_token,
@@ -78,11 +74,10 @@ export async function GET(req: Request) {
 
       await user.save();
     } else {
-      // New user — create
       user = await User.create({
         username: slackUser.real_name || slackUser.name || "Slack User",
         email: slackUser.profile.email || "",
-        password: "defaultpassword", // Temp: replace with secure random password
+        password: "defaultpassword", 
         slack: {
           id: slackUser.id,
           access_token: data.access_token,
@@ -92,7 +87,6 @@ export async function GET(req: Request) {
       });
     }
 
-    // Step 4: Redirect to frontend with userId
     return Response.redirect(
       `${process.env.NEXT_PUBLIC_NGROK_URL}/success?userId=${user._id}`
     );

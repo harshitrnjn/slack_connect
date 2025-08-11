@@ -21,10 +21,10 @@ export async function GET(req: NextRequest) {
       null,
       {
         params: {
-          client_id: process.env.SLACK_CLIENT_ID,
-          client_secret: process.env.SLACK_CLIENT_SECRET,
+          client_id: process.env.NEXT_PUBLIC_SLACK_CLIENT_ID!,
+          client_secret: process.env.SLACK_CLIENT_SECRET!,
           code,
-          redirect_uri: process.env.SLACK_REDIRECT_URI
+          redirect_uri: process.env.SLACK_REDIRECT_URI!
         }
       }
     );
